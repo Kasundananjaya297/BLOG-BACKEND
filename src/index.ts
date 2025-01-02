@@ -1,10 +1,13 @@
 import express from 'express';
 import dotenv from "dotenv";
+import mongoose from 'mongoose';
+import userRouts from './routs/userRouts';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DB_URL = process.env.DB_URL || '';
 
 /* Middlewares  to parse JSON bodies*/
 app.use(express.json());
@@ -22,14 +25,23 @@ app.get('/info', async(req, res) => {
         DATABASE_URL: process.env.DB_URL,
     });
 });
+app.use("/api/v1",userRouts)
 app.use((req, res, next) => {
     //extract the path from the request
     const path = req.path;
     res.status(404).sendFile(__dirname + "/views/index.html");
   });
 
+mongoose.connect(DB_URL, {}).then(() => {
+    console.log(`🌎 | App Started on  http://localhost:${PORT}`)
+}).catch((error: any) => {
+    console.log("Error occurred while connecting to database", error);
+});
+
 app.listen(PORT, () => {
     console.log(`Server is Successfully Running, and App is listening on port ${PORT}`);
 }).on('error', (error: any) => {
     console.log("Error occurred, server can't start", error);
 });
+
+
