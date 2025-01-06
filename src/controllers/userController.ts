@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createUser } from '../services/userServices';
+import { createUser, logUser } from '../services/userServices';
 import { responseDTO } from '../DTO/response';
 
 const registerUser = async (
@@ -20,5 +20,20 @@ const registerUser = async (
     res.status(500).json(responseDTO('false', [], 'Failed to Save user'));
   }
 };
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  const loginDetails = req.body;
+  let user;
+  try {
+    user = await logUser(loginDetails.email, loginDetails.password);
+    if (user && user.success == 'true') {
+      res.status(200).json(responseDTO('true', user?.data, user.message));
+    } else {
+      res.status(403).json(responseDTO('false', [], user.message));
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'internal Server Error'));
+  }
+};
 
-export { registerUser };
+export { registerUser, loginUser };

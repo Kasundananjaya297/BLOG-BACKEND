@@ -10,9 +10,7 @@ router.get('/users', async (req, res) => {
     Login a user
 */
 
-router.post('/users/login', async (req, res) => {
-  res.send('Login route');
-});
+router.post('/users/login', userController.loginUser);
 /*  
     POST api/v1/users/register 
     Register a new user

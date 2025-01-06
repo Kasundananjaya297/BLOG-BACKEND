@@ -8,7 +8,6 @@ const saltRounds = 10;
 const createUser = async (userDetails: IUser) => {
   try {
     const hashedPw = await bcrypt.hash(userDetails.password, saltRounds);
-
     const existUser = await userRepo.findUserByEmail(userDetails.email);
     if (existUser) {
       console.warn(`User Already Exists ${userDetails.email} `);
@@ -26,5 +25,27 @@ const createUser = async (userDetails: IUser) => {
     return { success: 'false', message: 'Failed to add user' };
   }
 };
+const logUser = async (email: string, password: string) => {
+  try {
+    const user = await userRepo.findUserByEmail(email);
+    if (!user) {
+      return { success: 'false', message: 'User not Exists' };
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      console.info(`User Logged Successfully ${email}`);
 
-export { createUser };
+      return {
+        success: 'true',
+        data: { email: user.email, role: user.role, token: 'asadasd asdasd ' },
+        message: 'Login successfully',
+      };
+    } else {
+      return { success: 'false', message: 'Password Missed match' };
+    }
+  } catch (err) {
+    console.log(err);
+    return { success: 'false', message: 'Internal server error' };
+  }
+};
+export { createUser, logUser };
