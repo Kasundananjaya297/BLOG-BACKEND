@@ -1,16 +1,22 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
 import * as userController from '../controllers/userController';
 
-router.get('/users', async(req, res) => {
-   
-    res.send('Users route');
+router.get('/users', async (req, res) => {
+  res.send('Users route');
 });
+/*  
+    GET api/v1/users/login 
+    Login a user
+*/
 
-router.post('/login', async(req, res) => {
-    res.send('Login route');
+router.post('/users/login', async (req, res) => {
+  res.send('Login route');
 });
-
-router.post('/register',userController.registerUser);
+/*  
+    POST api/v1/users/register 
+    Register a new user
+*/
+router.post('/users/register', userController.registerUser);
 
 export default router;

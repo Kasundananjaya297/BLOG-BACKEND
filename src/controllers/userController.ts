@@ -1,6 +1,24 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
+import { createUser } from '../services/userServices';
+import { responseDTO } from '../DTO/response';
 
-export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
-    
-    res.send(req.body);
-}
+const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userDetails = req.body;
+  let user;
+  try {
+    user = await createUser(userDetails);
+    if (user && user.success === 'false') {
+      res.status(500).json(responseDTO('false', [], user.message));
+    }
+    res.status(200).json(responseDTO('true', user?.data, user.message));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(responseDTO('false', [], 'Failed to Save user'));
+  }
+};
+
+export { registerUser };
