@@ -20,6 +20,7 @@ const registerUser = async (
     res.status(500).json(responseDTO('false', [], 'Failed to Save user'));
   }
 };
+
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   const loginDetails = req.body;
   let user;

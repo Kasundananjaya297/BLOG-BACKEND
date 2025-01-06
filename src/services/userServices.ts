@@ -25,6 +25,7 @@ const createUser = async (userDetails: IUser) => {
     return { success: 'false', message: 'Failed to add user' };
   }
 };
+
 const logUser = async (email: string, password: string) => {
   try {
     const user = await userRepo.findUserByEmail(email);
@@ -34,7 +35,6 @@ const logUser = async (email: string, password: string) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       console.info(`User Logged Successfully ${email}`);
-
       return {
         success: 'true',
         data: { email: user.email, role: user.role, token: 'asadasd asdasd ' },
@@ -48,4 +48,5 @@ const logUser = async (email: string, password: string) => {
     return { success: 'false', message: 'Internal server error' };
   }
 };
+
 export { createUser, logUser };
