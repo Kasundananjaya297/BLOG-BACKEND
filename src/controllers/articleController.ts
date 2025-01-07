@@ -11,11 +11,7 @@ const saveArticle = async (req: Request, res: Response, next: NextFunction) => {
       res
         .status(201)
         .json(
-          responseDTO(
-            articleResponse.success,
-            articleResponse.data,
-            articleResponse.message,
-          ),
+          responseDTO(articleResponse.success, {}, articleResponse.message),
         );
     } else {
       res
@@ -78,7 +74,10 @@ const getArticleWithPagination = async (
   const limit = parseInt(req.params.limit);
   let articleResponse;
   try {
-    articleResponse = await articleServices.getArticleWithPaginationService(offset, limit);
+    articleResponse = await articleServices.getArticleWithPaginationService(
+      offset,
+      limit,
+    );
     if (articleResponse.success === 'true') {
       res
         .status(200)

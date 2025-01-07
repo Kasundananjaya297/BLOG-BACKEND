@@ -5,6 +5,7 @@ interface IArticle extends Document {
   subtitle: string;
   images: string;
   category: string;
+  content: string;
 }
 
 const articleSchema: Schema = new Schema(
@@ -13,6 +14,7 @@ const articleSchema: Schema = new Schema(
     subtitle: { type: String, require: true },
     images: { type: String, require: false },
     category: { type: String, require: false },
+    content: { type: String, require: false },
   },
   { timestamps: true },
 );
