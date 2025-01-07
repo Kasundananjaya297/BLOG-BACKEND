@@ -1,5 +1,5 @@
 import { IArticle } from '../interfaces/articleInterfaces';
-import { saveArticle } from '../repos/articleRepo';
+import { saveArticleRepo, getAllArticlesRepo } from '../repos/articleRepo';
 
 const saveArticleService = async (article: IArticle) => {
   if (
@@ -12,7 +12,7 @@ const saveArticleService = async (article: IArticle) => {
     return { success: 'false', data: [], message: 'Required Field missed' };
   }
   try {
-    await saveArticle(article);
+    await saveArticleRepo(article);
     console.log('Article added successfully');
     return {
       success: 'true',
@@ -29,4 +29,23 @@ const saveArticleService = async (article: IArticle) => {
   }
 };
 
-export { saveArticleService };
+const getAllArticlesService = async () => {
+  try {
+    const articles = await getAllArticlesRepo();
+    console.log('Articles fetched successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Articles fetched successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch articles from the database',
+    };
+  }
+};
+
+export { saveArticleService, getAllArticlesService };

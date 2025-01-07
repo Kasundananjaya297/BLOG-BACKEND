@@ -34,4 +34,39 @@ const saveArticle = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { saveArticle };
+const getAllArticles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  let articleResponse;
+  try {
+    articleResponse = await articleServices.getAllArticlesService();
+    if (articleResponse.success === 'true') {
+      res
+        .status(200)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    } else {
+      res
+        .status(400)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
+  }
+};
+
+export { saveArticle, getAllArticles };

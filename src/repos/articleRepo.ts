@@ -1,7 +1,7 @@
 import { IArticle } from '../interfaces/articleInterfaces';
 import Article from '../models/articleModels';
 
-const saveArticle = async (articleDetails: IArticle) => {
+const saveArticleRepo = async (articleDetails: IArticle) => {
   try {
     const article = new Article(articleDetails);
     await article.save();
@@ -11,4 +11,8 @@ const saveArticle = async (articleDetails: IArticle) => {
     throw new Error('Failed to add article to the database');
   }
 };
-export { saveArticle };
+const getAllArticlesRepo = async () => {
+  const articles = await Article.find();
+  return articles;
+};
+export { saveArticleRepo,  getAllArticlesRepo };
