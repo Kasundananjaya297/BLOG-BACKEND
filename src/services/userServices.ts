@@ -6,7 +6,7 @@ import { userDTO } from '../DTO/response';
 
 const saltRounds = 10;
 
-const createUser = async (userDetails: IUser) => {
+const createUserService = async (userDetails: IUser) => {
   try {
     const hashedPw = await bcrypt.hash(userDetails.password, saltRounds);
     const existUser = await userRepo.findUserByEmail(userDetails.email);
@@ -31,7 +31,7 @@ const createUser = async (userDetails: IUser) => {
   }
 };
 
-const logUser = async (email: string, password: string) => {
+const logUserService = async (email: string, password: string) => {
   try {
     const user = await userRepo.findUserByEmail(email);
     if (!user) {
@@ -54,4 +54,4 @@ const logUser = async (email: string, password: string) => {
   }
 };
 
-export { createUser, logUser };
+export { createUserService as createUser, logUserService as logUser };

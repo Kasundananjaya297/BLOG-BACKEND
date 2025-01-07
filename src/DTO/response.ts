@@ -9,3 +9,6 @@ export const userDTO = (data: any, Authorization?: string) => {
     Authorization: Authorization,
   };
 };
+export const articleDTO=(data:any)=>{
+  return {}
+}
