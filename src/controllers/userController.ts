@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { createUser, logUser } from '../services/userServices';
-import { responseDTO } from '../DTO/response';
+import { responseDTO, userDTO } from '../DTO/response';
 
 const registerUser = async (
   req: Request,
@@ -10,11 +10,24 @@ const registerUser = async (
   const userDetails = req.body;
   let user;
   try {
+    if (
+      !userDetails.email ||
+      !userDetails.role ||
+      !userDetails.password ||
+      !userDetails.name
+    ) {
+      res.status(400).json(responseDTO('false', [], 'Empty Fields'));
+      return;
+    }
     user = await createUser(userDetails);
     if (user && user.success === 'false') {
       res.status(500).json(responseDTO('false', [], user.message));
     }
-    res.status(200).json(responseDTO('true', user?.data, user.message));
+    res
+      .status(200)
+      .json(
+        responseDTO(user.success.toString(), userDTO(user.data), user.message),
+      );
   } catch (err) {
     console.error(err);
     res.status(500).json(responseDTO('false', [], 'Failed to Save user'));
