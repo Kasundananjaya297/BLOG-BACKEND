@@ -1,4 +1,4 @@
-import User from '../models/userModal';
+import User from '../models/userModels';
 import { IUser } from '../interfaces/userInterface';
 
 const findUserByEmail = async (email: string) => {
@@ -21,7 +21,5 @@ const saveUser = async (userDetails: IUser) => {
     throw new Error('Failed to add user to the database');
   }
 };
-
-
 
 export { findUserByEmail, saveUser };

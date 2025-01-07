@@ -1,6 +1,6 @@
 export interface IArticle {
   title: string;
   subtitle: string;
-  images: string[];
+  images: string;
   category: string;
 }

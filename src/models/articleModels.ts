@@ -7,11 +7,14 @@ interface IArticle extends Document {
   category: string;
 }
 
-const articleSchema: Schema = new Schema({
-  title: { type: String, require: true },
-  subtitle: { type: String, require: true },
-  images: { type: String, require: false },
-  category: { type: String, require: false },
-});
+const articleSchema: Schema = new Schema(
+  {
+    title: { type: String, require: true },
+    subtitle: { type: String, require: true },
+    images: { type: String, require: false },
+    category: { type: String, require: false },
+  },
+  { timestamps: true },
+);
 
 export default mongoose.model<IArticle>('Articles', articleSchema);

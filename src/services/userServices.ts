@@ -1,6 +1,6 @@
 import { IUser } from '../interfaces/userInterface';
 import bcrypt from 'bcrypt';
-import User from '../models/userModal';
+import User from '../models/userModels';
 import * as userRepo from '../repos/userRepo';
 import { userDTO } from '../DTO/response';
 
@@ -54,4 +54,4 @@ const logUserService = async (email: string, password: string) => {
   }
 };
 
-export { createUserService , logUserService};
+export { createUserService, logUserService };
