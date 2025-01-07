@@ -2,6 +2,7 @@ import { IUser } from '../interfaces/userInterface';
 import bcrypt from 'bcrypt';
 import User from '../models/userModal';
 import * as userRepo from '../repos/userRepo';
+import { userDTO } from '../DTO/response';
 
 const saltRounds = 10;
 
@@ -11,7 +12,11 @@ const createUser = async (userDetails: IUser) => {
     const existUser = await userRepo.findUserByEmail(userDetails.email);
     if (existUser) {
       console.warn(`User Already Exists ${userDetails.email} `);
-      return { success: false, message: 'User already Exist' };
+      return {
+        success: false,
+        data: existUser,
+        message: 'User already Exist',
+      };
     }
     const user = new User({
       ...userDetails,
@@ -37,7 +42,7 @@ const logUser = async (email: string, password: string) => {
       console.info(`User Logged Successfully ${email}`);
       return {
         success: 'true',
-        data: { email: user.email, role: user.role, token: 'asadasd asdasd ' },
+        data: userDTO(user, 'asdkljsadlkasjdlaksdj'),
         message: 'Login successfully',
       };
     } else {
