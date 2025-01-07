@@ -1,6 +1,7 @@
-const saveArticle = () => {
-  console.log('save Article called');
+import { IArticle } from '../interfaces/articleInterfaces';
 
+const saveArticleService = async (article: IArticle) => {
+  console.log('save Article called');
 };
 
-export default { saveArticle };
+export { saveArticleService};

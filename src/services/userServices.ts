@@ -54,4 +54,4 @@ const logUserService = async (email: string, password: string) => {
   }
 };
 
-export { createUserService as createUser, logUserService as logUser };
+export { createUserService , logUserService};

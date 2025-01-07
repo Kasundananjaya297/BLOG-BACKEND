@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createUser, logUser } from '../services/userServices';
+import { createUserService, logUserService } from '../services/userServices';
 import { responseDTO, userDTO } from '../DTO/response';
 
 const registerUser = async (
@@ -19,7 +19,7 @@ const registerUser = async (
       res.status(400).json(responseDTO('false', [], 'Empty Fields'));
       return;
     }
-    user = await createUser(userDetails);
+    user = await createUserService(userDetails);
     if (user && user.success === 'false') {
       res.status(500).json(responseDTO('false', [], user.message));
     }
@@ -38,7 +38,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   const loginDetails = req.body;
   let user;
   try {
-    user = await logUser(loginDetails.email, loginDetails.password);
+    user = await logUserService(loginDetails.email, loginDetails.password);
     if (user && user.success == 'true') {
       res.status(200).json(responseDTO('true', user?.data, user.message));
     } else {
