@@ -3,8 +3,14 @@ import bcrypt from 'bcrypt';
 import User from '../models/userModels';
 import * as userRepo from '../repos/userRepo';
 import { userDTO } from '../DTO/response';
+import { JsonWebTokenError } from 'jsonwebtoken';
+import Jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 const saltRounds = 10;
+dotenv.config();
+
+const jwtSecret = process.env.JWT_SECRET as string;
 
 const createUserService = async (userDetails: IUser) => {
   try {
@@ -40,9 +46,14 @@ const logUserService = async (email: string, password: string) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       console.info(`User Logged Successfully ${email}`);
+      const token = Jwt.sign(
+        { email: user.email, role: user.role },
+        jwtSecret.toString(),
+        { expiresIn: '24h' },
+      );
       return {
         success: 'true',
-        data: userDTO(user, 'asdkljsadlkasjdlaksdj'),
+        data: userDTO(user, token),
         message: 'Login successfully',
       };
     } else {
