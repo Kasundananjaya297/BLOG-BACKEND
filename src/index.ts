@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRouts from './routs/userRouts';
+import articleRoutes from './routs/articleRoutes';
 
 dotenv.config();
 
@@ -34,7 +35,8 @@ mongoose
     console.log('Error occurred while connecting to database', error);
   });
 
-app.use('/api/v1', userRouts);
+app.use('/api/v1/users', userRouts);
+app.use('/api/v1/articles', articleRoutes);
 
 app.use((req, res, next) => {
   //extract the path from the request
