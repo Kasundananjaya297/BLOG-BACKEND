@@ -69,4 +69,41 @@ const getAllArticles = async (
   }
 };
 
-export { saveArticle, getAllArticles };
+const getArticleWithPagination = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const offset = parseInt(req.params.offset);
+  const limit = parseInt(req.params.limit);
+  let articleResponse;
+  try {
+    articleResponse = await articleServices.getArticleWithPaginationService(offset, limit);
+    if (articleResponse.success === 'true') {
+      res
+        .status(200)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    } else {
+      res
+        .status(400)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
+  }
+};
+
+export { saveArticle, getAllArticles, getArticleWithPagination };

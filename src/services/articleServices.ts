@@ -1,5 +1,10 @@
+import { get } from 'mongoose';
 import { IArticle } from '../interfaces/articleInterfaces';
-import { saveArticleRepo, getAllArticlesRepo } from '../repos/articleRepo';
+import {
+  saveArticleRepo,
+  getAllArticlesRepo,
+  getArticleWithPaginationRepo,
+} from '../repos/articleRepo';
 
 const saveArticleService = async (article: IArticle) => {
   if (
@@ -47,5 +52,31 @@ const getAllArticlesService = async () => {
     };
   }
 };
+const getArticleWithPaginationService = async (
+  offset: number,
+  limit: number,
+) => {
+  try {
+    const articles = await getArticleWithPaginationRepo(offset, limit);
 
-export { saveArticleService, getAllArticlesService };
+    console.log('Articles fetched successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Articles fetched successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch articles from the database',
+    };
+  }
+};
+
+export {
+  saveArticleService,
+  getAllArticlesService,
+  getArticleWithPaginationService,
+};

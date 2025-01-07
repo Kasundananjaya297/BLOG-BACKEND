@@ -15,4 +15,10 @@ const getAllArticlesRepo = async () => {
   const articles = await Article.find();
   return articles;
 };
-export { saveArticleRepo,  getAllArticlesRepo };
+const getArticleWithPaginationRepo = async (offset: number, limit: number) => {
+  const articles = await Article.find()
+    .skip(offset * limit)
+    .limit(limit);
+  return articles;
+};
+export { saveArticleRepo, getAllArticlesRepo, getArticleWithPaginationRepo };
