@@ -5,7 +5,9 @@ import {
   getAllArticlesRepo,
   getArticleWithPaginationRepo,
   getArticleByIdRepo,
+  getArticleByLetterRepo,
 } from '../repos/articleRepo';
+import { getArticleByLetter } from '../controllers/articleController';
 
 const saveArticleService = async (article: IArticle) => {
   if (
@@ -103,10 +105,29 @@ const getArticleByIdService = async (id: string) => {
     };
   }
 };
+const getArticleByLetterService = async (letter: string) => {
+  try {
+    const articles = await getArticleByLetterRepo(letter);
+    console.log('Articles fetched successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Articles fetched successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch articles from the database',
+    };
+  }
+};
 
 export {
   saveArticleService,
   getAllArticlesService,
   getArticleWithPaginationService,
   getArticleByIdService,
+  getArticleByLetterService,
 };

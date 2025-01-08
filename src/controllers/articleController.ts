@@ -139,10 +139,46 @@ const getArticleById = async (
     res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
   }
 };
+const getArticleByLetter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  let articleResponse;
+  const letter = req.params.letter;
+  try {
+    articleResponse = await articleServices.getArticleByLetterService(letter);
+    if (articleResponse.success === 'true') {
+      res
+        .status(200)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    } else {
+      res
+        .status(400)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
+  }
+};
 
 export {
   saveArticle,
   getAllArticles,
   getArticleWithPagination,
   getArticleById,
+  getArticleByLetter,
 };

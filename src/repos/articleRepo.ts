@@ -41,9 +41,26 @@ const getArticleByIdRepo = async (id: string) => {
     throw new Error('Failed to fetch article from the database');
   }
 };
+const getArticleByLetterRepo = async (letter: string) => {
+  try {
+    const articles = await Article.find({
+      $or: [
+        { title: { $regex: `^${letter}`, $options: 'i' } },
+        { content: { $regex: `^${letter}`, $options: 'i' } },
+        { category: { $regex: `^${letter}`, $options: 'i' } },
+        { subtitle: { $regex: `^${letter}`, $options: 'i' } },
+      ],
+    });
+    return articles;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch article from the database');
+  }
+};
 export {
   saveArticleRepo,
   getAllArticlesRepo,
   getArticleWithPaginationRepo,
   getArticleByIdRepo,
+  getArticleByLetterRepo,
 };
