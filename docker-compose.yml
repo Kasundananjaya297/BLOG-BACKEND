@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  blog-backend:
+    image: kasun20045/blog-prod:latest
+    container_name: blog-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run dev
