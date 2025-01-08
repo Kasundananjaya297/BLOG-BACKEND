@@ -6,8 +6,12 @@ import {
   getArticleWithPaginationRepo,
   getArticleByIdRepo,
   getArticleByLetterRepo,
+  updateArticleRepo,
 } from '../repos/articleRepo';
-import { getArticleByLetter } from '../controllers/articleController';
+import {
+  getArticleByLetter,
+  updateArticle,
+} from '../controllers/articleController';
 
 const saveArticleService = async (article: IArticle) => {
   if (
@@ -123,6 +127,24 @@ const getArticleByLetterService = async (letter: string) => {
     };
   }
 };
+const updateArticleService = async (id: string, article: IArticle) => {
+  try {
+    const articles = await updateArticleRepo(id, article);
+    console.log('Article updated successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Article updated successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to update article in the database',
+    };
+  }
+};
 
 export {
   saveArticleService,
@@ -130,4 +152,5 @@ export {
   getArticleWithPaginationService,
   getArticleByIdService,
   getArticleByLetterService,
+  updateArticleService,
 };

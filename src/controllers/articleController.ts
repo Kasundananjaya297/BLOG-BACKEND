@@ -175,10 +175,51 @@ const getArticleByLetter = async (
   }
 };
 
+const updateArticle = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const id = req.params.id;
+  const article = req.body;
+  let articleResponse;
+  try {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      res.status(400).json(responseDTO('false', [], 'Invalid article id'));
+    }
+    articleResponse = await articleServices.updateArticleService(id, article);
+    if (articleResponse.success === 'true') {
+      res
+        .status(200)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    } else {
+      res
+        .status(400)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
+  }
+};
+
 export {
   saveArticle,
   getAllArticles,
   getArticleWithPagination,
   getArticleById,
   getArticleByLetter,
+  updateArticle,
 };

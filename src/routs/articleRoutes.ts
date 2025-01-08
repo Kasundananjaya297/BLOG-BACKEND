@@ -34,17 +34,23 @@ router.get(
   authMiddleware,
   articleController.getArticleById,
 );
-/* 
-    GET api/v1/articles/getArticleByTitle/:title 
-    Get an article by title
+/*
+  PUT api/v1/articles/updateArticle/:id
+  Update an article by id
  */
-router.get('/getArticleByTitle/:title', (req, res, next) => {
-  res.send('Get article by title');
-});
-
+router.put(
+  '/updateArticle/:id',
+  authMiddleware,
+  articleController.updateArticle,
+);
 /*
   GET api/v1/articles/getArticleByLetter/:letter
+  Get an article by letter
 */
-router.get('/getArticleByLetter/:letter',authMiddleware, articleController.getArticleByLetter);
+router.get(
+  '/getArticleByLetter/:letter',
+  authMiddleware,
+  articleController.getArticleByLetter,
+);
 
 export default router;

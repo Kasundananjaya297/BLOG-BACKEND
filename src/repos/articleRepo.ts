@@ -57,10 +57,22 @@ const getArticleByLetterRepo = async (letter: string) => {
     throw new Error('Failed to fetch article from the database');
   }
 };
+const updateArticleRepo = async (id: string, articleDetails: IArticle) => {
+  try {
+    const article = await Article.findByIdAndUpdate(id, articleDetails, {
+      new: true,
+    });
+    return article;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to update article in the database');
+  }
+};
 export {
   saveArticleRepo,
   getAllArticlesRepo,
   getArticleWithPaginationRepo,
   getArticleByIdRepo,
   getArticleByLetterRepo,
+  updateArticleRepo,
 };
