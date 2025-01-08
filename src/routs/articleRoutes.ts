@@ -44,6 +44,10 @@ router.put(
 */
 router.get('/getArticleByLetter/:letter', articleController.getArticleByLetter);
 
+/*
+  DELETE api/v1/articles/deleteArticle/:id
+  Delete an article by id
+*/
 router.delete(
   '/deleteArticle/:id',
   authMiddleware,
