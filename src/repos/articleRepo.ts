@@ -45,10 +45,10 @@ const getArticleByLetterRepo = async (letter: string) => {
   try {
     const articles = await Article.find({
       $or: [
-        { title: { $regex: `^${letter}`, $options: 'i' } },
-        { content: { $regex: `^${letter}`, $options: 'i' } },
-        { category: { $regex: `^${letter}`, $options: 'i' } },
-        { subtitle: { $regex: `^${letter}`, $options: 'i' } },
+        { title: { $regex: `${letter}`, $options: 'i' } },
+        { content: { $regex: `${letter}`, $options: 'i' } },
+        { category: { $regex: `${letter}`, $options: 'i' } },
+        { subtitle: { $regex: `${letter}`, $options: 'i' } },
       ],
     });
     return articles;
