@@ -1,0 +1,5 @@
+{
+    "watch": ["src", "package.json", "Dockerfile"],
+    "ext": "js,ts,json,dockerfile",
+    "exec": "sh ./scripts/rebuild-and-restart.sh"
+  }

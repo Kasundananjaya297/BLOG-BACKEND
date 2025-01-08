@@ -34,5 +34,8 @@ router.get(
   authMiddleware,
   articleController.getArticleById,
 );
+router.get('/getArticleByTitle/:title', (req, res, next) => {
+  res.send('Get article by title by kasun');
+});
 
 export default router;
