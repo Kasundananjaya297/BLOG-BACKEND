@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import userRouts from './routs/userRouts';
 import articleRoutes from './routs/articleRoutes';
 import aboutRoutes from './routs/aboutRoutes';
+import imageSectionRoutes from './routs/imageSectionRoutes';
 
 dotenv.config();
 
@@ -38,7 +39,8 @@ mongoose
 
 app.use('/api/v1/users', userRouts);
 app.use('/api/v1/articles', articleRoutes);
-app.use("/api/v1/about", aboutRoutes);
+app.use('/api/v1/about', aboutRoutes);
+app.use('/api/v1/imageSection', imageSectionRoutes);
 
 app.use((req, res, next) => {
   //extract the path from the request
