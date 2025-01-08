@@ -4,6 +4,7 @@ import {
   saveArticleRepo,
   getAllArticlesRepo,
   getArticleWithPaginationRepo,
+  getArticleByIdRepo,
 } from '../repos/articleRepo';
 
 const saveArticleService = async (article: IArticle) => {
@@ -74,9 +75,35 @@ const getArticleWithPaginationService = async (
     };
   }
 };
+const getArticleByIdService = async (id: string) => {
+  try {
+    const article = await getArticleByIdRepo(id);
+    console.log('Article fetched successfully');
+    if (!article) {
+      return {
+        success: 'false',
+        data: [],
+        message: 'Article not found',
+      };
+    }
+    return {
+      success: 'true',
+      data: article,
+      message: 'Article fetched successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch article from the database',
+    };
+  }
+};
 
 export {
   saveArticleService,
   getAllArticlesService,
   getArticleWithPaginationService,
+  getArticleByIdService,
 };

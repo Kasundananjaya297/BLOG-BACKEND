@@ -25,5 +25,14 @@ router.get(
   authMiddleware,
   articleController.getArticleWithPagination,
 );
+/* 
+    GET api/v1/articles/getArticleById/:id 
+    Get an article by id
+*/
+router.get(
+  '/getArticleById/:id',
+  authMiddleware,
+  articleController.getArticleById,
+);
 
 export default router;

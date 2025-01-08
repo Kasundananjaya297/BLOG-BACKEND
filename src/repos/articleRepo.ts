@@ -12,13 +12,37 @@ const saveArticleRepo = async (articleDetails: IArticle) => {
   }
 };
 const getAllArticlesRepo = async () => {
-  const articles = await Article.find();
-  return articles;
+  try {
+    const articles = await Article.find();
+    return articles;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch articles from the database');
+  }
 };
 const getArticleWithPaginationRepo = async (offset: number, limit: number) => {
-  const articles = await Article.find()
-    .skip(offset * limit)
-    .limit(limit);
-  return articles;
+  try {
+    const articles = await Article.find()
+      .skip(offset * limit)
+      .limit(limit);
+    return articles;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch articles from the database');
+  }
 };
-export { saveArticleRepo, getAllArticlesRepo, getArticleWithPaginationRepo };
+const getArticleByIdRepo = async (id: string) => {
+  try {
+    const article = await Article.findById(id);
+    return article;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch article from the database');
+  }
+};
+export {
+  saveArticleRepo,
+  getAllArticlesRepo,
+  getArticleWithPaginationRepo,
+  getArticleByIdRepo,
+};

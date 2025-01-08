@@ -104,5 +104,45 @@ const getArticleWithPagination = async (
     res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
   }
 };
+const getArticleById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const id = req.params.id;
+  let articleResponse;
+  try {
+    articleResponse = await articleServices.getArticleByIdService(id);
+    if (articleResponse.success === 'true') {
+      res
+        .status(200)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    } else {
+      res
+        .status(400)
+        .json(
+          responseDTO(
+            articleResponse.success,
+            articleResponse.data,
+            articleResponse.message,
+          ),
+        );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(responseDTO('false', [], 'Internal Server Error'));
+  }
+};
 
-export { saveArticle, getAllArticles, getArticleWithPagination };
+export {
+  saveArticle,
+  getAllArticles,
+  getArticleWithPagination,
+  getArticleById,
+};
