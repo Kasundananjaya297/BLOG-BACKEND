@@ -14,7 +14,7 @@ router.post('/saveArticle', authMiddleware, articleController.saveArticle);
     GET api/v1/articles/getAllArticles 
     Get all articles
  */
-router.get('/getAllArticles', authMiddleware, articleController.getAllArticles);
+router.get('/getAllArticles', articleController.getAllArticles);
 
 /*
   GET api/v1/articles/getArticleWithPagination/:offset/:limit
@@ -22,18 +22,13 @@ router.get('/getAllArticles', authMiddleware, articleController.getAllArticles);
  */
 router.get(
   '/getArticleWithPagination/:offset/:limit',
-  authMiddleware,
   articleController.getArticleWithPagination,
 );
 /* 
     GET api/v1/articles/getArticleById/:id 
     Get an article by id
 */
-router.get(
-  '/getArticleById/:id',
-  authMiddleware,
-  articleController.getArticleById,
-);
+router.get('/getArticleById/:id', articleController.getArticleById);
 /*
   PUT api/v1/articles/updateArticle/:id
   Update an article by id
@@ -47,10 +42,12 @@ router.put(
   GET api/v1/articles/getArticleByLetter/:letter
   Get an article by letter
 */
-router.get(
-  '/getArticleByLetter/:letter',
+router.get('/getArticleByLetter/:letter', articleController.getArticleByLetter);
+
+router.delete(
+  '/deleteArticle/:id',
   authMiddleware,
-  articleController.getArticleByLetter,
+  articleController.deleteArticle,
 );
 
 export default router;

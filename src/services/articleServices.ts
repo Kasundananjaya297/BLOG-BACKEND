@@ -7,8 +7,10 @@ import {
   getArticleByIdRepo,
   getArticleByLetterRepo,
   updateArticleRepo,
+  deleteArticleRepo,
 } from '../repos/articleRepo';
 import {
+  deleteArticle,
   getArticleByLetter,
   updateArticle,
 } from '../controllers/articleController';
@@ -145,6 +147,24 @@ const updateArticleService = async (id: string, article: IArticle) => {
     };
   }
 };
+const deleteArticleService = async (id: string) => {
+  try {
+    const articles = await deleteArticleRepo(id);
+    console.log('Article deleted successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Article deleted successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to delete article from the database',
+    };
+  }
+};
 
 export {
   saveArticleService,
@@ -153,4 +173,5 @@ export {
   getArticleByIdService,
   getArticleByLetterService,
   updateArticleService,
+  deleteArticleService,
 };

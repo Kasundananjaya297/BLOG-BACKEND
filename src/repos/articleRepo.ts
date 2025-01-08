@@ -68,6 +68,15 @@ const updateArticleRepo = async (id: string, articleDetails: IArticle) => {
     throw new Error('Failed to update article in the database');
   }
 };
+const deleteArticleRepo = async (id: string) => {
+  try {
+    const article = await Article.deleteOne({ _id: id });
+    return article;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to delete article in the database');
+  }
+};
 export {
   saveArticleRepo,
   getAllArticlesRepo,
@@ -75,4 +84,5 @@ export {
   getArticleByIdRepo,
   getArticleByLetterRepo,
   updateArticleRepo,
+  deleteArticleRepo,
 };
