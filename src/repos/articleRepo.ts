@@ -32,8 +32,9 @@ const getArticleWithPaginationRepo = async (offset: number, limit: number) => {
   }
 };
 const getArticleByIdRepo = async (id: string) => {
+  //check if id is valid _id or oid in mongodb
   try {
-    const article = await Article.findById(id);
+    const article = await Article.find({ _id: id });
     return article;
   } catch (err) {
     console.log(err);

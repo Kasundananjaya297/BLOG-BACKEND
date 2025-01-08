@@ -35,7 +35,7 @@ router.get(
   articleController.getArticleById,
 );
 router.get('/getArticleByTitle/:title', (req, res, next) => {
-  res.send('Get article by title by kasun');
+  res.send('Get article by title');
 });
 
 export default router;

@@ -77,6 +77,9 @@ const getArticleWithPaginationService = async (
 };
 const getArticleByIdService = async (id: string) => {
   try {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return { message: 'Invalid article id', success: 'false', data: [] };
+    }
     const article = await getArticleByIdRepo(id);
     console.log('Article fetched successfully');
     if (!article) {
