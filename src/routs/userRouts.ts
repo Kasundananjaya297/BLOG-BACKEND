@@ -12,6 +12,6 @@ router.post('/login', userController.loginUser);
     POST api/v1/users/register 
     Register a new user
 */
-router.post('/register', authMiddleware, userController.registerUser);
+router.post('/register', userController.registerUser);
 
 export default router;
