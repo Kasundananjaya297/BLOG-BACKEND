@@ -9,7 +9,7 @@ import imageSectionRoutes from './routs/imageSectionRoutes';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8001;
 const DB_URL = process.env.DB_URL || '';
 
 /* Middlewares  to parse JSON bodies*/
