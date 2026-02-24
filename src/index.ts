@@ -1,14 +1,20 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRouts from './routs/userRouts';
 import articleRoutes from './routs/articleRoutes';
 import aboutRoutes from './routs/aboutRoutes';
 import imageSectionRoutes from './routs/imageSectionRoutes';
+import { syncAllUsers } from './services/userSyncService';
 
 dotenv.config();
 
 const app = express();
+
+// Enable CORS
+app.use(cors());
+
 const PORT = process.env.PORT || 8001;
 const DB_URL = process.env.DB_URL || '';
 
@@ -30,8 +36,10 @@ app.get('/info', async (req, res) => {
 });
 mongoose
   .connect(DB_URL)
-  .then(() => {
+  .then(async () => {
     console.log(`🌎 | App Started on  http://localhost:${PORT}`);
+    // One time sync of all users from MySQL to MongoDB
+    await syncAllUsers();
   })
   .catch((error: any) => {
     console.log('Error occurred while connecting to database', error);

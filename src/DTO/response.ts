@@ -4,11 +4,12 @@ export const responseDTO = (success: string, data: any, message: String) => {
 export const userDTO = (data: any, Authorization?: string) => {
   return {
     email: data.email,
-    name: data.name,
+    fname: data.fname,
+    lname: data.lname,
     role: data.role,
     Authorization: Authorization,
   };
 };
-export const articleDTO=(data:any)=>{
+export const articleDTO = (data: any) => {
   return {}
 }

@@ -6,6 +6,10 @@ interface IArticle extends Document {
   images: string;
   category: string;
   content: string;
+  authorName: string;
+  authorEmail: string;
+  authorId: string;
+  authorProfileImage: string;
 }
 
 const articleSchema: Schema = new Schema(
@@ -15,6 +19,10 @@ const articleSchema: Schema = new Schema(
     images: { type: String, require: false },
     category: { type: String, require: false },
     content: { type: String, require: false },
+    authorName: { type: String, require: false },
+    authorEmail: { type: String, require: false },
+    authorId: { type: String, require: false },
+    authorProfileImage: { type: String, require: false },
   },
   { timestamps: true },
 );

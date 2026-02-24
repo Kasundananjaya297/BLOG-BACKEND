@@ -1,12 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { responseDTO } from '../DTO/response';
 import * as articleServices from '../services/articleServices';
+import { AuthRequest } from '../middleware/middleware';
 
-const saveArticle = async (req: Request, res: Response, next: NextFunction) => {
+const saveArticle = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const article = req.body;
+  const user = req.user;
+
   let articleResponse;
   try {
-    articleResponse = await articleServices.saveArticleService(article);
+    articleResponse = await articleServices.saveArticleService(article, user);
     if (articleResponse.success === 'true') {
       res
         .status(201)

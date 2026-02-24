@@ -15,7 +15,7 @@ import {
   updateArticle,
 } from '../controllers/articleController';
 
-const saveArticleService = async (article: IArticle) => {
+const saveArticleService = async (article: IArticle, user?: any) => {
   if (
     !article.title ||
     !article.category ||
@@ -25,6 +25,23 @@ const saveArticleService = async (article: IArticle) => {
     console.log('Required Field missed');
     return { success: 'false', data: [], message: 'Required Field missed' };
   }
+
+  // Populate author details if user is provided and fields are missing
+  if (user) {
+    if (!article.authorName) {
+      article.authorName = `${user.fname} ${user.lname}`.trim();
+    }
+    if (!article.authorEmail) {
+      article.authorEmail = user.email;
+    }
+    if (!article.authorId) {
+      article.authorId = user._id;
+    }
+    if (!article.authorProfileImage) {
+      article.authorProfileImage = user.profileImage;
+    }
+  }
+
   try {
     await saveArticleRepo(article);
     console.log('Article added successfully');

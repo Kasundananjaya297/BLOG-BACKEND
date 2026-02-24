@@ -13,5 +13,10 @@ router.post('/login', userController.loginUser);
     Register a new user
 */
 router.post('/register', authMiddleware, userController.registerUser);
+/*  
+    PUT api/v1/users/profile-image 
+    Update user profile image
+*/
+router.put('/profile-image', authMiddleware, userController.updateProfileImage);
 
 export default router;

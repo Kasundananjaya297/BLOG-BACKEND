@@ -22,4 +22,18 @@ const saveUser = async (userDetails: IUser) => {
   }
 };
 
-export { findUserByEmail, saveUser };
+const updateProfileImageRepo = async (email: string, imageUrl: string) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { email },
+      { profileImage: imageUrl },
+      { new: true }
+    );
+    return user;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to update user profile image in the database');
+  }
+};
+
+export { findUserByEmail, saveUser, updateProfileImageRepo };
