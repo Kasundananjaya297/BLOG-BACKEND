@@ -42,6 +42,9 @@ export const syncAllUsers = async () => {
     }
 };
 
+import Article from '../models/articleModels';
+import Comment from '../models/commentModels';
+
 export const syncUserByEmail = async (email: string) => {
     try {
         // Ensure connection is established
@@ -65,6 +68,23 @@ export const syncUserByEmail = async (email: string) => {
             },
             { upsert: true, new: true }
         );
+
+        if (mongoUser) {
+            const authorIds = [mongoUser.id || (mongoUser as any)._id.toString(), mongoUser.mysqlId.toString()];
+            const fullName = `${mongoUser.fname} ${mongoUser.lname}`;
+
+            // Sync the name to all of the user's articles
+            await Article.updateMany(
+                { authorId: { $in: authorIds } },
+                { authorName: fullName }
+            );
+
+            // Sync the name to all of the user's comments
+            await Comment.updateMany(
+                { authorId: { $in: authorIds } },
+                { authorName: fullName }
+            );
+        }
 
         return mongoUser;
     } catch (error) {
@@ -96,6 +116,23 @@ export const syncUserById = async (id: number) => {
             },
             { upsert: true, new: true }
         );
+
+        if (mongoUser) {
+            const authorIds = [mongoUser.id || (mongoUser as any)._id.toString(), mongoUser.mysqlId.toString()];
+            const fullName = `${mongoUser.fname} ${mongoUser.lname}`;
+
+            // Sync the name to all of the user's articles
+            await Article.updateMany(
+                { authorId: { $in: authorIds } },
+                { authorName: fullName }
+            );
+
+            // Sync the name to all of the user's comments
+            await Comment.updateMany(
+                { authorId: { $in: authorIds } },
+                { authorName: fullName }
+            );
+        }
 
         return mongoUser;
     } catch (error) {

@@ -6,6 +6,8 @@ import userRouts from './routs/userRouts';
 import articleRoutes from './routs/articleRoutes';
 import aboutRoutes from './routs/aboutRoutes';
 import imageSectionRoutes from './routs/imageSectionRoutes';
+import commentRoutes from './routs/commentRoutes';
+import reportRoutes from './routs/reportRoutes';
 import { syncAllUsers } from './services/userSyncService';
 
 dotenv.config();
@@ -49,6 +51,8 @@ app.use('/api/v1/users', userRouts);
 app.use('/api/v1/articles', articleRoutes);
 app.use('/api/v1/about', aboutRoutes);
 app.use('/api/v1/imageSection', imageSectionRoutes);
+app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/reports', reportRoutes);
 
 app.use((req, res, next) => {
   //extract the path from the request

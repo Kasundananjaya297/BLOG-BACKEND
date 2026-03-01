@@ -55,4 +55,41 @@ const updateProfileImageService = async (email: string, imageUrl: string) => {
   }
 };
 
-export { createUserService, logUserService, updateProfileImageService };
+const getProfileService = async (email: string) => {
+  try {
+    const user = await userRepo.findUserByEmail(email);
+    if (!user) {
+      return { success: 'false', message: 'User not found' };
+    }
+    return { success: 'true', message: 'Profile retrieved successfully', data: user };
+  } catch (err) {
+    console.log(err);
+    return { success: 'false', message: 'Internal server error' };
+  }
+};
+
+const getProfileByIdService = async (id: string) => {
+  try {
+    const user = await userRepo.findUserById(id);
+    if (!user) {
+      return { success: 'false', message: 'User not found' };
+    }
+    // Return a sanitized version of the user for public viewing
+    const publicProfile = {
+      _id: user._id,
+      mysqlId: user.mysqlId,
+      fname: user.fname,
+      lname: user.lname,
+      email: user.email,
+      role: user.role,
+      profileImage: user.profileImage,
+      createdAt: (user as any).createdAt,
+    };
+    return { success: 'true', message: 'Profile retrieved successfully', data: publicProfile };
+  } catch (err) {
+    console.log(err);
+    return { success: 'false', message: 'Internal server error' };
+  }
+};
+
+export { createUserService, logUserService, updateProfileImageService, getProfileService, getProfileByIdService };

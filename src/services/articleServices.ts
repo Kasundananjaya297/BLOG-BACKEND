@@ -8,6 +8,9 @@ import {
   getArticleByLetterRepo,
   updateArticleRepo,
   deleteArticleRepo,
+  getArticlesByAuthorRepo,
+  toggleLikeRepo,
+  getArticlesByAuthorIdRepo,
 } from '../repos/articleRepo';
 import {
   deleteArticle,
@@ -16,14 +19,9 @@ import {
 } from '../controllers/articleController';
 
 const saveArticleService = async (article: IArticle, user?: any) => {
-  if (
-    !article.title ||
-    !article.category ||
-    !article.images ||
-    !article.subtitle
-  ) {
-    console.log('Required Field missed');
-    return { success: 'false', data: [], message: 'Required Field missed' };
+  if (!article.content) {
+    console.log('Required Field missed: content');
+    return { success: 'false', data: [], message: 'Content is required' };
   }
 
   // Populate author details if user is provided and fields are missing
@@ -183,6 +181,65 @@ const deleteArticleService = async (id: string) => {
   }
 };
 
+const getArticlesByAuthorService = async (authorIds: string[]) => {
+  try {
+    const articles = await getArticlesByAuthorRepo(authorIds);
+    console.log('Articles fetched successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Articles fetched successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch articles from the database',
+    };
+  }
+};
+
+const getArticlesByAuthorIdService = async (authorId: string) => {
+  try {
+    const articles = await getArticlesByAuthorIdRepo(authorId);
+    console.log('Articles fetched by author ID successfully');
+    return {
+      success: 'true',
+      data: articles,
+      message: 'Articles fetched by author ID successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to fetch articles by author ID from the database',
+    };
+  }
+};
+
+const toggleLikeService = async (id: string, userId: string) => {
+  try {
+    const article = await toggleLikeRepo(id, userId);
+    if (!article) {
+      return { success: 'false', data: [], message: 'Article not found' };
+    }
+    return {
+      success: 'true',
+      data: article,
+      message: 'Like status toggled successfully',
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 'false',
+      data: [],
+      message: 'Failed to toggle like in the database',
+    };
+  }
+};
+
 export {
   saveArticleService,
   getAllArticlesService,
@@ -191,4 +248,7 @@ export {
   getArticleByLetterService,
   updateArticleService,
   deleteArticleService,
+  getArticlesByAuthorService,
+  toggleLikeService,
+  getArticlesByAuthorIdService,
 };
