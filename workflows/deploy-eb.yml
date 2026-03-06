@@ -1,0 +1,161 @@
+name: Build and Deploy Backend to Elastic Beanstalk
+
+concurrency:
+  group: eb-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-south-1
+  EB_APP: Fish-market-blog-env
+  EB_ENV: fish-market-blog
+  S3_BUCKET: elasticbeanstalk-ap-south-1-073109174875
+  AWS_PAGER: ""
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Change to backend directory
+        run: cd Back_end
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install deps
+        working-directory: ./Back_end
+        run: npm install
+
+      - name: Build
+        working-directory: ./Back_end
+        run: npm run build
+
+      - name: Configure AWS credentials (Access Keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Create deployment ZIP (Backend Node.js)
+        run: |
+          set -euo pipefail
+
+          cd Back_end
+
+          VERSION_LABEL=$(date +%Y%m%d%H%M%S)
+          ZIP_FILE="backend-${VERSION_LABEL}.zip"
+
+          rm -rf bundle
+          mkdir -p bundle
+
+          # Copy source files
+          cp -R src bundle/
+          cp -R dist bundle/
+          cp package.json bundle/
+          cp package-lock.json bundle/ || true
+          cp tsconfig.json bundle/
+          
+          # Copy .ebextensions for SSL setup
+          if [ -d .ebextensions ]; then
+            cp -R .ebextensions bundle/
+            echo "✓ Copied .ebextensions folder"
+          fi
+          
+          # Copy HTTPS fix script
+          if [ -f fix_https_nginx.sh ]; then
+            cp fix_https_nginx.sh bundle/
+            echo "✓ Copied fix_https_nginx.sh"
+          fi
+
+          # Create zip from bundle contents
+          (cd bundle && zip -qry "../$ZIP_FILE" .)
+
+          echo "VERSION_LABEL=$VERSION_LABEL" >> $GITHUB_ENV
+          echo "ZIP_FILE=$ZIP_FILE" >> $GITHUB_ENV
+
+      - name: Upload ZIP to S3
+        run: |
+          cd Back_end
+          echo "Uploading $ZIP_FILE to s3://$S3_BUCKET/"
+          aws s3 cp "$ZIP_FILE" "s3://$S3_BUCKET/$ZIP_FILE"
+
+      - name: Create new Elastic Beanstalk application version
+        run: |
+          echo "Creating EB application version $VERSION_LABEL..."
+          aws elasticbeanstalk create-application-version \
+            --application-name "$EB_APP" \
+            --version-label "$VERSION_LABEL" \
+            --source-bundle S3Bucket="$S3_BUCKET",S3Key="$ZIP_FILE"
+
+      - name: Deploy new version to Elastic Beanstalk
+        run: |
+          echo "Deploying version $VERSION_LABEL to Elastic Beanstalk..."
+          aws elasticbeanstalk update-environment \
+            --environment-name "$EB_ENV" \
+            --version-label "$VERSION_LABEL"
+
+      - name: Wait for environment to finish updating
+        run: |
+          echo "Waiting for Elastic Beanstalk environment to finish deployment..."
+          STATUS=""
+          HEALTH=""
+          MAX_ATTEMPTS=40
+          COUNT=0
+
+          until [[ "$STATUS" == "Ready" && ("$HEALTH" == "Green" || "$HEALTH" == "Yellow") ]] || [[ $COUNT -ge $MAX_ATTEMPTS ]]; do
+            ENV_INFO=$(aws elasticbeanstalk describe-environments \
+              --environment-names "$EB_ENV" \
+              --region "$AWS_REGION" \
+              --query 'Environments[0].[Status,Health]' \
+              --output text)
+
+            STATUS=$(echo "$ENV_INFO" | awk '{print $1}')
+            HEALTH=$(echo "$ENV_INFO" | awk '{print $2}')
+
+            echo "Current Status: $STATUS | Health: $HEALTH"
+
+            if [[ "$STATUS" == "Terminated" ]]; then
+              echo "Environment was terminated during deployment!"
+              exit 1
+            fi
+
+            sleep 15
+            COUNT=$((COUNT+1))
+          done
+
+          if [[ "$STATUS" != "Ready" ]]; then
+            echo "Environment did not finish deployment within the timeout."
+            echo "Final Status: $STATUS | Health: $HEALTH"
+            exit 1
+          fi
+
+          if [[ "$HEALTH" == "Red" ]]; then
+            echo "Environment is Ready but Health is Red."
+            exit 1
+          fi
+
+          echo "Deployment successful! Status: $STATUS | Health: $HEALTH"
+
+      - name: Show recent events on failure
+        if: failure()
+        run: |
+          echo "Fetching recent Elastic Beanstalk events..."
+          aws elasticbeanstalk describe-events \
+            --environment-name "$EB_ENV" \
+            --region "$AWS_REGION" \
+            --max-items 20 \
+            --query 'Events[*].[EventDate,Severity,Message]' \
+            --output table
