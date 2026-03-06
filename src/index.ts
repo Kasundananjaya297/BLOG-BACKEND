@@ -37,7 +37,10 @@ app.get('/info', async (req, res) => {
   });
 });
 mongoose
-  .connect(DB_URL)
+  .connect(DB_URL, {
+    serverSelectionTimeoutMS: 5000,
+    bufferCommands: false,
+  })
   .then(async () => {
     console.log(`🌎 | App Started on  http://localhost:${PORT}`);
     // One time sync of all users from MySQL to MongoDB
