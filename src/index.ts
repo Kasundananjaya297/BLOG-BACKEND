@@ -29,7 +29,7 @@ app.use(cors(corsOptions));
 // Explicitly handle OPTIONS preflight for all routes
 app.options('*', cors(corsOptions));
 
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8080;
 const DB_URL = process.env.DB_URL || '';
 
 /* Middlewares  to parse JSON bodies*/
