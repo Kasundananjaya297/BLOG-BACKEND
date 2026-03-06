@@ -12,8 +12,8 @@ on:
 
 env:
   AWS_REGION: ap-south-1
-  EB_APP: Fish-market-blog-env
-  EB_ENV: fish-market-blog
+  EB_APP: fish-market-blog
+  EB_ENV: Fish-market-blog-env
   S3_BUCKET: elasticbeanstalk-ap-south-1-073109174875
   AWS_PAGER: ""
 
