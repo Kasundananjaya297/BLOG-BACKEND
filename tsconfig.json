@@ -5,7 +5,9 @@
       "moduleResolution": "node",
       "target": "ES6",
       "module": "commonjs",
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "outDir": "./dist",
+      "rootDir": "./src"
   }
 }
 
