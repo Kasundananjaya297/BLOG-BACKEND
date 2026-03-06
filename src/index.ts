@@ -69,6 +69,14 @@ app.use('/api/v1/imageSection', imageSectionRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/reports', reportRoutes);
 
+// Compatibility aliases without /api/v1 prefix
+app.use('/users', userRouts);
+app.use('/articles', articleRoutes);
+app.use('/about', aboutRoutes);
+app.use('/imageSection', imageSectionRoutes);
+app.use('/comments', commentRoutes);
+app.use('/reports', reportRoutes);
+
 app.use((req, res, next) => {
   //extract the path from the request
   const path = req.path;
