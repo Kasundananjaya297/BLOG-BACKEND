@@ -60,6 +60,7 @@ jobs:
           cp package.json bundle/
           cp package-lock.json bundle/ || true
           cp tsconfig.json bundle/
+          cp Procfile bundle/
           
           # Copy .ebextensions for SSL setup
           if [ -d .ebextensions ]; then
