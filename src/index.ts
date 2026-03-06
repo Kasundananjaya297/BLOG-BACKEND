@@ -15,7 +15,19 @@ dotenv.config();
 const app = express();
 
 // Enable CORS
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'https://www.smartaquamarket.com',
+    'https://blog.smartaquamarket.com',
+    'http://localhost:3000',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+// Explicitly handle OPTIONS preflight for all routes
+app.options('*', cors(corsOptions));
 
 const PORT = process.env.PORT || 8001;
 const DB_URL = process.env.DB_URL || '';
