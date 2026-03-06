@@ -54,4 +54,33 @@ router.delete(
   articleController.deleteArticle,
 );
 
+/*
+  GET api/v1/articles/getArticlesByAuthor
+  Get articles by authenticated author
+*/
+router.get(
+  '/getArticlesByAuthor',
+  authMiddleware,
+  articleController.getArticlesByAuthor,
+);
+
+/*
+  PUT api/v1/articles/toggleLike/:id
+  Toggle like status for an article
+*/
+router.put(
+  '/toggleLike/:id',
+  authMiddleware,
+  articleController.toggleLike,
+);
+
+/*
+  GET api/v1/articles/getArticlesByAuthorId/:authorId
+  Get articles by author ID
+*/
+router.get(
+  '/getArticlesByAuthorId/:authorId',
+  articleController.getArticlesByAuthorId,
+);
+
 export default router;

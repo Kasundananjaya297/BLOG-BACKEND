@@ -1,14 +1,22 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRouts from './routs/userRouts';
 import articleRoutes from './routs/articleRoutes';
 import aboutRoutes from './routs/aboutRoutes';
 import imageSectionRoutes from './routs/imageSectionRoutes';
+import commentRoutes from './routs/commentRoutes';
+import reportRoutes from './routs/reportRoutes';
+import { syncAllUsers } from './services/userSyncService';
 
 dotenv.config();
 
 const app = express();
+
+// Enable CORS
+app.use(cors());
+
 const PORT = process.env.PORT || 8001;
 const DB_URL = process.env.DB_URL || '';
 
@@ -30,8 +38,10 @@ app.get('/info', async (req, res) => {
 });
 mongoose
   .connect(DB_URL)
-  .then(() => {
+  .then(async () => {
     console.log(`🌎 | App Started on  http://localhost:${PORT}`);
+    // One time sync of all users from MySQL to MongoDB
+    await syncAllUsers();
   })
   .catch((error: any) => {
     console.log('Error occurred while connecting to database', error);
@@ -41,6 +51,8 @@ app.use('/api/v1/users', userRouts);
 app.use('/api/v1/articles', articleRoutes);
 app.use('/api/v1/about', aboutRoutes);
 app.use('/api/v1/imageSection', imageSectionRoutes);
+app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/reports', reportRoutes);
 
 app.use((req, res, next) => {
   //extract the path from the request

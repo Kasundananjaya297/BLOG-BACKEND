@@ -13,5 +13,20 @@ router.post('/login', userController.loginUser);
     Register a new user
 */
 router.post('/register', authMiddleware, userController.registerUser);
+/*  
+    PUT api/v1/users/profile-image 
+    Update user profile image
+*/
+router.put('/profile-image', authMiddleware, userController.updateProfileImage);
+/*  
+    GET api/v1/users/profile 
+    Get user profile (including profile image)
+*/
+router.get('/profile', authMiddleware, userController.getProfile);
+/*  
+    GET api/v1/users/profile/:id
+    Get public user profile by ID
+*/
+router.get('/profile/:id', userController.getUserProfileById);
 
 export default router;

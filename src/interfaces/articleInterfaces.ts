@@ -3,4 +3,9 @@ export interface IArticle {
   subtitle: string;
   images: string;
   category: string;
+  content?: string;
+  authorName?: string;
+  authorEmail?: string;
+  authorId?: string;
+  authorProfileImage?: string;
 }

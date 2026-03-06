@@ -32,9 +32,8 @@ const getArticleWithPaginationRepo = async (offset: number, limit: number) => {
   }
 };
 const getArticleByIdRepo = async (id: string) => {
-  //check if id is valid _id or oid in mongodb
   try {
-    const article = await Article.find({ _id: id });
+    const article = await Article.findById(id);
     return article;
   } catch (err) {
     console.log(err);
@@ -77,6 +76,49 @@ const deleteArticleRepo = async (id: string) => {
     throw new Error('Failed to delete article in the database');
   }
 };
+
+const getArticlesByAuthorRepo = async (authorIds: string[]) => {
+  try {
+    const articles = await Article.find({ authorId: { $in: authorIds } });
+    return articles;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch user articles from the database');
+  }
+};
+
+const toggleLikeRepo = async (id: string, userId: string) => {
+  try {
+    const article = await Article.findById(id);
+    if (!article) return null;
+
+    const likeIndex = article.likes.indexOf(userId);
+    if (likeIndex > -1) {
+      // Unlike: User ID already in likes array, remove it
+      article.likes.splice(likeIndex, 1);
+    } else {
+      // Like: User ID not in likes array, add it
+      article.likes.push(userId);
+    }
+
+    await article.save();
+    return article;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to toggle like in the database');
+  }
+};
+
+const getArticlesByAuthorIdRepo = async (authorId: string) => {
+  try {
+    const articles = await Article.find({ authorId }).sort({ createdAt: -1 });
+    return articles;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Failed to fetch articles by author ID from the database');
+  }
+};
+
 export {
   saveArticleRepo,
   getAllArticlesRepo,
@@ -85,4 +127,7 @@ export {
   getArticleByLetterRepo,
   updateArticleRepo,
   deleteArticleRepo,
+  getArticlesByAuthorRepo,
+  toggleLikeRepo,
+  getArticlesByAuthorIdRepo,
 };
