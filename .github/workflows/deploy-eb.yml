@@ -25,9 +25,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Change to backend directory
-        run: cd Back_end
-
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -35,11 +32,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install deps
-        working-directory: ./Back_end
         run: npm install
 
       - name: Build
-        working-directory: ./Back_end
         run: npm run build
 
       - name: Configure AWS credentials (Access Keys)
@@ -52,8 +47,6 @@ jobs:
       - name: Create deployment ZIP (Backend Node.js)
         run: |
           set -euo pipefail
-
-          cd Back_end
 
           VERSION_LABEL=$(date +%Y%m%d%H%M%S)
           ZIP_FILE="backend-${VERSION_LABEL}.zip"
@@ -88,7 +81,6 @@ jobs:
 
       - name: Upload ZIP to S3
         run: |
-          cd Back_end
           echo "Uploading $ZIP_FILE to s3://$S3_BUCKET/"
           aws s3 cp "$ZIP_FILE" "s3://$S3_BUCKET/$ZIP_FILE"
 
